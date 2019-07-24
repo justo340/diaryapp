@@ -1,0 +1,33 @@
+# version of the docker compose
+version: '3.6'
+
+#We can have many services for example db,web
+services:
+  web:
+    #build the current directory
+    build: .
+    command: python3 /code/manage.py migrate 0.0.0.0:8000
+    ports:   #external port:internal port...(Directs the container port to use the external OS port
+      - 8000:8000
+    environment:
+      - SQL_ENGINE=django.db.backends.postgresql_psycopg2
+      - SQL_DATABASE=diary
+      - SQL_USER=justus
+      - SQL_PASSWORD=12345
+      - SQL_HOST=db
+      - SQL_PORT=5432
+    depends_on:
+      - db
+  db:
+    restart: always
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/11/
+    environment:
+      - POSTGRES_USER=justus
+      - POSTGRES_DB=diary
+      - POSTGRES_PASSWORD=12345
+
+volumes:
+      postgres_data:
+

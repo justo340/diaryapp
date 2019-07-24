@@ -1,0 +1,8 @@
+from diary.settings import *
+
+DATABASE = {
+        'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': ':memory',
+        }
+}
