@@ -33,7 +33,7 @@ def run(self):
 
 
 setup(
-    name='diaryapp',
+    name='diary',
     version='1.0.1',
     description="a simple diaryapp that one can use to note the days happennings",  # Optional
     long_description=long_description,  # Optional
