@@ -10,7 +10,8 @@ WORKDIR /.code
 
 # install psycopg2
 RUN apk update && apk add --no-cache postgresql-dev gcc python3-dev musl-dev
-RUN pip3 install psycopg2
+RUN pip3 install --upgrade pip\
+    &&pip3 install psycopg2
 
 
 
