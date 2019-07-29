@@ -25,7 +25,7 @@ services:
       - postgres_data:/var/lib/postgresql/11/
     environment:
       - POSTGRES_USER=justus
-      - POSTGRES_DB=diarydocker-compose --version
+      - POSTGRES_DB=diary
       - POSTGRES_PASSWORD=12345
 
 volumes:
