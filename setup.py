@@ -38,7 +38,7 @@ setup(
     description="a simple diaryapp that one can use to note the days happennings",  # Optional
     long_description=long_description,  # Optional
     long_description_content_type='text/markdown',  # Optional (see note above)
-    url='https://github.com/justo340/second_upload',  # Optional
+    url='https://github.com/justo340/third_upload',  # Optional
 
     # This should be your name or the name of the organization which owns the
     # project.
