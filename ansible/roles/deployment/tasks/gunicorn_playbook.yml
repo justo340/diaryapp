@@ -1,0 +1,54 @@
+- name: install gunicorn
+  pip:
+   name: gunicorn
+   executable: pip3
+  become: yes
+
+- name: start gunicorn
+  shell: |
+    . /home/ubuntu/justo/envs/diaryapp/bin/activate
+    cd /home/ubuntu/justo/diaryapp
+    gunicorn --daemon --workers 3 --bind unix:/home/ubuntu/justo/diaryapp/diaryapp.sock diary.wsgi
+
+- name: Recursively change ownership of a directory
+  file:
+    path: /home/ubuntu/justo/diaryapp
+    state: directory
+    recurse: yes
+    owner: ubuntu
+
+
+# - name: create gunicorn socket file
+#   template:
+#     src: diaryapp.socket
+#     dest: /etc/systemd/system/
+#   become: yes
+
+# - name: create portfolio service file
+#   template:
+#     src: diaryapp.service
+#     dest: /etc/systemd/system/
+#   become: yes
+
+# - name: systemd reread configs
+#   systemd:
+#     daemon_reload: yes
+#   become: yes
+
+# - name: Create gunicorn socket
+#   systemd:
+#     state: started
+#     name: diaryapp.socket
+#   become: yes
+
+# - name: Enable gunicorn.socket
+#   systemd:
+#     name: diaryapp.socket
+#     enabled: yes
+#   become: yes
+
+# - name: enable portfolio service
+#   systemd:
+#     name: diaryapp
+#     enabled: yes
+#   become: yes

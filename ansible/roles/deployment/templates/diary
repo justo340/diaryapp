@@ -1,0 +1,16 @@
+server {
+    listen [::]:80 default_server;
+    listen 80 default_server;
+    # server_name diaryapp.ml www.diaryapp.ml;
+    server_name diaryapp.ml www.diaryapp.ml;
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    location /static/ {
+            root /home/ubuntu/justo/diaryapp;
+    }
+
+    location / {
+            include proxy_params;
+            proxy_pass http://unix:/home/ubuntu/justo/diaryapp/diaryapp.sock;
+    }
+}
