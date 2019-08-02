@@ -9,6 +9,7 @@ jobs: # A basic unit of work in a run
         environment: # environment variables for primary container
           DATABASE_URL: postgresql://justus@localhost/diary?sslmode=disable
       # CircleCI PostgreSQL images available at: https://hub.docker.com/r/circleci/postgres/
+          ANSIBLE_HOST_KEY_CHECKING: False
       - image: circleci/postgres:9.6.2
         environment: # environment variables for the Postgres container.
           POSTGRES_USER: justus
@@ -37,32 +38,38 @@ jobs: # A basic unit of work in a run
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: test-results
 
-      - run:
-          name: init .pypirc
-          command: |
-            echo -e "[pypi]" >> ~/.pypirc
-            echo -e "username = justo" >> ~/.pypirc
-            echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+      # - run:
+      #     name: init .pypirc
+      #     command: |
+      #       echo -e "[pypi]" >> ~/.pypirc
+      #       echo -e "username = justo" >> ~/.pypirc
+      #       echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
 
-      - run:
-          name: create packages
-          command: |
-            python3 setup.py sdist
-      - run:
-          name: upload to pypi
-          command: |
-            python3 -m venv  venv
-             . venv/bin/activate
-             pip3 install --upgrade pip
-            pip3 install twine
-            twine upload dist/*
+      # - run:
+      #     name: create packages
+      #     command: |
+      #       python3 setup.py sdist
+      # - run:
+      #     name: upload to pypi
+      #     command: |
+      #       python3 -m venv  venv
+      #        . venv/bin/activate
+      #        pip3 install --upgrade pip
+      #       pip3 install twine
+      #       twine upload dist/*
 
       - run:
           name: executing ansible to a remote server
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            ssh-keyscan 13.59.243.40
             pip3 install ansible
             ansible-playbook -i ansible/hosts ansible/deploy.yml
-
+Workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master

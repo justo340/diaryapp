@@ -1,8 +1,7 @@
 server {
     listen [::]:80 default_server;
     listen 80 default_server;
-    # server_name diaryapp.ml www.diaryapp.ml;
-    server_name diaryapp.ml www.diaryapp.ml;
+    server_name diaryapp.cf www.diaryapp.cf;
     location = /favicon.ico { access_log off; log_not_found off; }
 
     location /static/ {

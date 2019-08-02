@@ -31,4 +31,4 @@
     src: env.j2
     dest: "{{ app_dir }}/.env"
   become: yes
-  become_user: ubuntu #"{{ deployer_user }}"
+  become_user: "{{ deployer_user }}"

@@ -16,4 +16,4 @@
     path: /home/ubuntu/justo/diaryapp
     state: directory
     recurse: yes
-    owner: ubuntu
+    owner: "{{ deployer_user }}"

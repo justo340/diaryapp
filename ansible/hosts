@@ -1,8 +1,5 @@
-all:
-  hosts:
-
 [web]
-13.59.243.40 ansible_user=ubuntu
+18.191.196.196 ansible_user=ubuntu
 
 [web:vars]
 ansible_python_interpreter=/usr/bin/python3

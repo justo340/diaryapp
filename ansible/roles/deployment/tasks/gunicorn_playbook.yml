@@ -9,5 +9,7 @@
     path: /home/ubuntu/justo/diaryapp
     state: directory
     recurse: yes
-    owner: ubuntu
+  become: yes
+  become_user: ubuntu
+
 
