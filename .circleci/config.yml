@@ -57,12 +57,12 @@ jobs: # A basic unit of work in a run
             pip3 install twine
             twine upload dist/*
 
-      # - run:
-      #     name: executing ansible to a remote server
-      #     command: |
-      #       python3 -m venv  venv
-      #       . venv/bin/activate
-      #       ssh-keyscan 18.223.3.31
-      #       pip3 install ansible
-      #       ansible-playbook -i ansible/hosts.yml ansible/playbook.yml
+      - run:
+          name: executing ansible to a remote server
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            ssh-keyscan 13.59.243.40
+            pip3 install ansible
+            ansible-playbook -i ansible/hosts ansible/deploy.yml
 

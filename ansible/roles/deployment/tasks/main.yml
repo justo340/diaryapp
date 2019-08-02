@@ -5,4 +5,5 @@
 - import_tasks: migrations.yml
 - import_tasks: nginx_playbook.yml
 - import_tasks: gunicorn_playbook.yml
+- import_tasks: encrypt.yml
 
