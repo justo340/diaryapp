@@ -1,5 +1,5 @@
 [web]
-18.191.196.196 ansible_user=ubuntu
+www.diaryapp.cf ansible_user=ubuntu
 
 [web:vars]
 ansible_python_interpreter=/usr/bin/python3

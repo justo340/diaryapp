@@ -47,9 +47,7 @@
     become_user: root
 
   - name: Obtain SSL certificate
-    command: certbot --nginx --noninteractive --agree-tos --email justus.njogu@healthcloud.co.ke  -d diaryapp.cf -d www.diaryapp.cf
-    become: yes
-    become_user: root
+    command: sudo certbot --nginx --noninteractive --agree-tos --email justus.njogu@healthcloud.co.ke  -d diaryapp.cf -d www.diaryapp.cf
 
   - name: free port 80
     command: fuser -k 80/tcp
