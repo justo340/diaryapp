@@ -5,7 +5,7 @@ jobs: # A basic unit of work in a run
     working_directory: ~/training/third_upload
     docker: # run the steps with Docker
       # CircleCI Python images available at: https://hub.docker.com/r/circleci/python/
-      - image: circleci/python:3.6.4
+      - image: circleci/python:3.7
         environment: # environment variables for primary container
           DATABASE_URL: postgresql://justus@localhost/diary?sslmode=disable
       # CircleCI PostgreSQL images available at: https://hub.docker.com/r/circleci/postgres/
@@ -32,12 +32,15 @@ jobs: # A basic unit of work in a run
             - "/usr/local/lib/python3.6/site-packages"
       - run:
           command: |
-            tox
+            pytest
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test-results
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: test-results
+
   publish:
+    docker:
+      - image: circleci/python:3.7
     steps:
       - checkout
       - run:
@@ -58,6 +61,11 @@ jobs: # A basic unit of work in a run
              pip3 install --upgrade pip
             pip3 install twine
             twine upload dist/*
+  deploy:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
       - run:
           name: executing ansible to a remote server
           command: |
@@ -67,23 +75,18 @@ jobs: # A basic unit of work in a run
             ansible-playbook -i ansible/hosts ansible/provision.yml
 Workflows:
   version: 2
-  build-and-publish:
+  test_publish_deploy:
     jobs:
       - build
-      - hold:
-          type: approval
-          requires:
-            - build
-
       - publish:
           requires:
-            - hold
+            - build
           filters:
             branches:
               only: master
-      # - deploy:
-      #     requires:
-      #       - build
-      #     filters:
-      #       branches:
-      #         only: master
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
