@@ -71,12 +71,17 @@ jobs: # A basic unit of work in a run
             ansible-playbook -i ansible/hosts ansible/provision.yml
 Workflows:
   version: 2
-  build_publish:
+  build-and-publish:
     jobs:
       - build
-      - publish:
+      - hold:
+          type: approval
           requires:
             - build
+
+      - publish:
+          requires:
+            - hold
           filters:
             branches:
               only: master
