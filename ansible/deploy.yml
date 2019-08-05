@@ -1,9 +1,16 @@
-##
-# This playbook deploys the whole app stack
-##
-- name: apply configuration to server
-  hosts: web
-  any_errors_fatal: true
-  gather_facts: False
-  roles:
-    - deployment
+---
+- hosts: web
+  gather_facts: false
+  become: yes
+
+  tasks:
+    - name: Clone/pull the latest code
+      git:
+        repo: "https:// c048de6f53316893c993a0579dcea7d109b03803@github.com/justo340/diaryapp.git"
+        dest: /home/ubuntu/justo/diaryapp
+      become_user: justo
+
+    - name: restart app
+      service:
+        name: diaryapp
+        state: restarted

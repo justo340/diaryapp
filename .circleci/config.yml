@@ -74,7 +74,7 @@ jobs: # A basic unit of work in a run
             python3 -m venv venv
             . venv/bin/activate
             pip3 install ansible
-            ansible-playbook -i ansible/hosts ansible/deploy.yml
+            ansible-playbook -i ansible/hosts ansible/provision.yml
 Workflows:
   version: 2
   build_publish_deploy:

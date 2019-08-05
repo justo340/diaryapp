@@ -37,3 +37,8 @@ django_wsgi_module: diary.wsgi
 django_settings_module: diary.settings.dev
 django_secret_key: 'd$4gpe$11%3qrv#2@_iuwhji3_e*zw2a^^!g%jz@r35ybo-nir'
 database_url: '{{ db_url }}'
+
+# tick stack vars
+influxdb_username: "{{ deployer_user }}"
+influxdb_password: "{{ db_password }}"
+influxdb_database_name: telegraf
