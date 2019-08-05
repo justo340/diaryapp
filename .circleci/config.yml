@@ -78,11 +78,7 @@ jobs: # A basic unit of work in a run
 
 Workflows:
   version: 2
-<<<<<<< HEAD
   build_publish_deploy:
-=======
-  test_publish_deploy:
->>>>>>> 4f791526f3c377a88fff6b2e7b676ced2695ada3
     jobs:
       - test
       - publish:
