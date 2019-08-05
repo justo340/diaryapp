@@ -1,5 +1,7 @@
 from entries import forms
 from django.test import TestCase
+# from entries.models import Entry
+# from django.core.alidation import ValidationError
 
 
 class TestEntryForm(TestCase):
@@ -9,8 +11,12 @@ class TestEntryForm(TestCase):
             'confirm': 'not secret'
         }
         form = forms.EntryForm(data=invalid_data)
+        # try:
+        #     c.full_clean()
+        # except ValidationError as e:
+        #     self.assertTrue('cleaned_words' in e.message_dict)
         assert form.is_valid() is False, 'should be invalid since nothing <=0'
-        self.assertTrue(form.errors), 'should return the error message'
+        # assert form.errors() is True, 'should return the error message'
 
     def test_entry_form_valid(self):
         valid_data = {
