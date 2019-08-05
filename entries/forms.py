@@ -1,4 +1,3 @@
-from django import forms
 from django.forms import ModelForm
 from .models import Entry
 
@@ -10,9 +9,9 @@ class EntryForm(ModelForm):
 
     def clean_text(self):
         cleaned_words = self.cleaned_data.get('text')
-        if len(cleaned_words) <= 0:
-            raise forms.ValidationError({
-                'confirm': 'please enter some more words'})
+        # if len(cleaned_words) <= 0:
+        #     raise forms.ValidationError({
+        #         'confirm': 'please enter some more words'})
         return cleaned_words
 
     def __init__(self, *args, **kwargs):
