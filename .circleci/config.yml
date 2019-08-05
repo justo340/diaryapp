@@ -1,30 +1,35 @@
-version: 2  # use CircleCI 2.0
-jobs: # A basic unit of work in a run
-  build: # runs not using Workflows must have a `build` job as entry point
-    # directory where steps are run
+version: 2
+
+jobs:
+  test:
     working_directory: ~/training/third_upload
-    docker: # run the steps with Docker
-      # CircleCI Python images available at: https://hub.docker.com/r/circleci/python/
+    docker:
       - image: circleci/python:3.6.4
-        environment: # environment variables for primary container
-          DATABASE_URL: postgresql://justus@localhost/diary?sslmode=disable
-      # CircleCI PostgreSQL images available at: https://hub.docker.com/r/circleci/postgres/
-          ANSIBLE_HOST_KEY_CHECKING: False
+        environment:
+          SECRET_KEY: $SECRET_KEY
+          SQL_ENGINE: $SQL_ENGINE
+          SQL_DATABASE: $SQL_DATABASE
+          SQL_USER: $SQL_USER
+          SQL_PASSWORD: $SQL_PASSWORD
+          SQL_HOST: $SQL_HOST
+          SQL_PORT: $SQL_PORT
       - image: circleci/postgres:9.6.2
-        environment: # environment variables for the Postgres container.
-          POSTGRES_USER: justus
-          POSTGRES_DB: diary
-    steps: # steps that comprise the `build` job
-      - checkout # check out source code to working directory
+        environment:
+          POSTGRES_USER: $POSTGRES_USER
+          POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+          POSTGRES_DB: $POSTGRES_DB
+          # POSTGRES_USER: justus
+          # POSTGRES_DB: diary
+    steps:
+      - checkout
       - run: sudo chown -R circleci:circleci /usr/local/bin
       - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
       - restore_cache:
-      # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
           key: deps9-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           command: |
             pip3 install -r requirements.txt
-      - save_cache: # cache Python dependencies using checksum of Pipfile as the cache-key
+      - save_cache:
           key: deps9-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - ".venv"
@@ -33,18 +38,23 @@ jobs: # A basic unit of work in a run
       - run:
           command: |
               tox
-      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+      - store_test_results:
           path: test-results
-      - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: test-results
+      - store_artifacts:
+          path: htmlcov
 
   deploy:
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.6.4
     environment:
       - ANSIBLE_HOST_KEY_CHECKING: False
     steps:
       - checkout
+      - run:
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip3 install -r requirements/local.txt
       - run:
           name: init .pypirc
           command: |
@@ -74,10 +84,10 @@ Workflows:
   version: 2
   build_publish_deploy:
     jobs:
-      - build
+      - test
       - deploy:
           requires:
-            - build
+            - test
           filters:
             branches:
               only: master
