@@ -42,7 +42,6 @@ jobs: # A basic unit of work in a run
     docker:
       - image: circleci/python:3.6.4
     steps:
-      - checkout
       - run:
           name: init .pypirc
           command: |
