@@ -1,6 +1,6 @@
 version: 2  # use CircleCI 2.0
 jobs: # A basic unit of work in a run
-  build: # runs not using Workflows must have a `build` job as entry point
+  test: # runs not using Workflows must have a `build` job as entry point
     # directory where steps are run
     working_directory: ~/training/third_upload
     docker: # run the steps with Docker
@@ -42,6 +42,7 @@ jobs: # A basic unit of work in a run
     docker:
       - image: circleci/python:3.6.4
     steps:
+      - checkout
       - run:
           name: init .pypirc
           command: |
@@ -77,9 +78,9 @@ jobs: # A basic unit of work in a run
 
 Workflows:
   version: 2
-  build_publish_deploy:
+  test_publish_and_deploy:
     jobs:
-      - build
+      - test
       - publish:
           filters:
             branches:
