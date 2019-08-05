@@ -1,6 +1,6 @@
 version: 2  # use CircleCI 2.0
 jobs: # A basic unit of work in a run
-  test: # runs not using Workflows must have a `build` job as entry point
+  build: # runs not using Workflows must have a `build` job as entry point
     # directory where steps are run
     working_directory: ~/training/third_upload
     docker: # run the steps with Docker
@@ -77,16 +77,16 @@ Workflows:
   version: 2
   test_publish_deploy:
     jobs:
-      - test
+      - build
       - publish:
           requires:
-            - test
+            - build
           filters:
             branches:
               only: master
       - deploy:
           requires:
-            - test
+            - build
           filters:
             branches:
               only: master
