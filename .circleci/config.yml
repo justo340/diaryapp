@@ -42,7 +42,7 @@ jobs: # A basic unit of work in a run
       - image: circleci/python:3.6.4
         environment:
           ANSIBLE_HOST_KEY_CHECKING: False
-      steps:
+    steps:
       - checkout
       - run:
           name: init .pypirc
