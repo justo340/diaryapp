@@ -38,11 +38,11 @@ jobs: # A basic unit of work in a run
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: test-results
 
-  # publish:
-  #   docker:
-  #     - image: circleci/python:3.6.4
-  #   steps:
-  #     - checkout
+  publish:
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - checkout
       - run:
           name: init .pypirc
           command: |
@@ -61,11 +61,11 @@ jobs: # A basic unit of work in a run
              pip3 install --upgrade pip
             pip3 install twine
             twine upload dist/*
-  # deploy:
-  #   docker:
-  #     - image: circleci/python:3.6.4
-  #   steps:
-  #     - checkout
+  deploy:
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - checkout
       - run:
           name: executing ansible to a remote server
           command: |
@@ -73,20 +73,20 @@ jobs: # A basic unit of work in a run
             . venv/bin/activate
             pip3 install ansible
             ansible-playbook -i ansible/hosts ansible/provision.yml
-# Workflows:
-#   version: 2
-#   build_publish_deploy:
-#     jobs:
-#       - build
-#       - publish:
-#           requires:
-#             - build
-#           filters:
-#             branches:
-#               only: master
-#       - deploy:
-#           requires:
-#             - build
-#           filters:
-#             branches:
-#               only: master
+Workflows:
+  version: 2
+  build_publish_deploy:
+    jobs:
+      - build
+      - publish:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
