@@ -38,10 +38,6 @@ jobs: # A basic unit of work in a run
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: test-results
   publish:
-    docker: # run the steps with Docker
-      - image: circleci/python:3.6.4
-        environment:
-          ANSIBLE_HOST_KEY_CHECKING: False
     steps:
       - checkout
       - run:
