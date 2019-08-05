@@ -1,10 +1,5 @@
----
 - name: Install InfluxDB
-<<<<<<< HEAD
-  apt: 
-=======
   apt:
->>>>>>> a621264f047e9587f52c5d53982cb0bacfcd6c0c
     name: influxdb
     state: present
   become: yes
