@@ -38,26 +38,36 @@ jobs: # A basic unit of work in a run
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: test-results
 
-      # - run:
-      #     name: init .pypirc
-      #     command: |
-      #       echo -e "[pypi]" >> ~/.pypirc
-      #       echo -e "username = justo" >> ~/.pypirc
-      #       echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+  publish:
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - checkout
+      - run:
+          name: init .pypirc
+          command: |
+            echo -e "[pypi]" >> ~/.pypirc
+            echo -e "username = justo" >> ~/.pypirc
+            echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
 
-      # - run:
-      #     name: create packages
-      #     command: |
-      #       python3 setup.py sdist
-      # - run:
-      #     name: upload to pypi
-      #     command: |
-      #       python3 -m venv  venv
-      #        . venv/bin/activate
-      #        pip3 install --upgrade pip
-      #       pip3 install twine
-      #       twine upload dist/*
+      - run:
+          name: create packages
+          command: |
+            python3 setup.py sdist
+      - run:
+          name: upload to pypi
+          command: |
+            python3 -m venv  venv
+             . venv/bin/activate
+             pip3 install --upgrade pip
+            pip3 install twine
+            twine upload dist/*
 
+  deploy:
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - checkout
       - run:
           name: executing ansible to a remote server
           command: |
@@ -67,9 +77,14 @@ jobs: # A basic unit of work in a run
             ansible-playbook -i ansible/hosts ansible/provision.yml
 Workflows:
   version: 2
-  build:
+  build_publish_deploy:
     jobs:
-      - build:
+      - build
+      - publish:
+          filters:
+            branches:
+              only: master
+      - deploy:
           filters:
             branches:
               only: master
