@@ -38,9 +38,11 @@ jobs: # A basic unit of work in a run
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: test-results
 
-  publish:
+  deploy:
     docker:
-      - image: circleci/python:3.6.4
+      - image: circleci/python:3.7
+    environment:
+      - ANSIBLE_HOST_KEY_CHECKING: False
     steps:
       - checkout
       - run:
@@ -61,11 +63,6 @@ jobs: # A basic unit of work in a run
              pip3 install --upgrade pip
             pip3 install twine
             twine upload dist/*
-  deploy:
-    docker:
-      - image: circleci/python:3.6.4
-    steps:
-      - checkout
       - run:
           name: executing ansible to a remote server
           command: |
@@ -78,12 +75,6 @@ Workflows:
   build_publish_deploy:
     jobs:
       - build
-      - publish:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
       - deploy:
           requires:
             - build
