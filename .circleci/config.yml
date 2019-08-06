@@ -39,6 +39,9 @@ jobs:
     environment:
       - ANSIBLE_HOST_KEY_CHECKING: False
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - $KEY
       - checkout
       - run:
           name: init .pypirc
