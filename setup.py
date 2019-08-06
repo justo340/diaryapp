@@ -34,7 +34,7 @@ def run(self):
 
 setup(
     name='diaryapps',
-    version='1.2.5',
+    version='1.2.6',
     description="a simple diaryapp that one can use to note the days happennings",  # Optional
     long_description=long_description,  # Optional
     long_description_content_type='text/markdown',  # Optional (see note above)
