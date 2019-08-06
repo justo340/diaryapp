@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  test:
     docker:
       - image: circleci/python:3.6.4
         environment:
@@ -27,7 +27,7 @@ jobs:
             - "/usr/local/lib/python3.6/site-packages"
       - run:
           command: |
-            pytest
+            tox
       - store_test_results:
           path: test-results
       - store_artifacts:
@@ -39,44 +39,41 @@ jobs:
     environment:
       - ANSIBLE_HOST_KEY_CHECKING: False
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - $KEY
       - checkout
       - run:
           name: init .pypirc
-          command: |
+          shell: |
             echo -e "[pypi]" >> ~/.pypirc
             echo -e "username = justo" >> ~/.pypirc
             echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
       - run:
           name: create packages
-          command: |
+          shell: |
             python3 setup.py sdist
       - run:
           name: upload to pypi
-          command: |
+          shell: |
             python3 -m venv  venv
              . venv/bin/activate
-             pip3 install --upgrade pip
+            pip3 install --upgrade pip
             pip3 install twine
             twine upload dist/*
       - run:
           name: executing ansible to a remote server
-          command: |
+          shell: |
             python3 -m venv venv
             . venv/bin/activate
             pip3 install ansible
             ansible-playbook -i ansible/hosts ansible/provision.yml
 
-Workflows:
+workflows:
   version: 2
-  build_deploy:
+  test_deploy:
     jobs:
-      - build
+      - test
       - deploy:
           requires:
-            - build
+            - test
           filters:
             branches:
               only: master
