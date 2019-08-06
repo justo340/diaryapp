@@ -1,25 +1,16 @@
 version: 2
-
 jobs:
   test:
     working_directory: ~/training/third_upload
     docker:
       - image: circleci/python:3.6.4
         environment:
-          SECRET_KEY: $SECRET_KEY
-          SQL_ENGINE: $SQL_ENGINE
-          SQL_DATABASE: $SQL_DATABASE
-          SQL_USER: $SQL_USER
-          SQL_PASSWORD: $SQL_PASSWORD
-          SQL_HOST: $SQL_HOST
-          SQL_PORT: $SQL_PORT
+          DATABASE_URL: postgresql://justus@localhost/diary?sslmode=disable
+          ANSIBLE_HOST_KEY_CHECKING: False
       - image: circleci/postgres:9.6.2
-        environment:
-          POSTGRES_USER: $POSTGRES_USER
-          POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-          POSTGRES_DB: $POSTGRES_DB
-          # POSTGRES_USER: justus
-          # POSTGRES_DB: diary
+        environment: .
+          POSTGRES_USER: justus
+          POSTGRES_DB: diary
     steps:
       - checkout
       - run: sudo chown -R circleci:circleci /usr/local/bin
@@ -37,24 +28,17 @@ jobs:
             - "/usr/local/lib/python3.6/site-packages"
       - run:
           command: |
-              tox
+            pytest
       - store_test_results:
           path: test-results
       - store_artifacts:
-          path: htmlcov
+          path: test-results
 
-  deploy:
+  publish:
     docker:
       - image: circleci/python:3.6.4
-    environment:
-      - ANSIBLE_HOST_KEY_CHECKING: False
     steps:
       - checkout
-      - run:
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip3 install -r requirements/local.txt
       - run:
           name: init .pypirc
           command: |
@@ -73,6 +57,11 @@ jobs:
              pip3 install --upgrade pip
             pip3 install twine
             twine upload dist/*
+  deploy:
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - checkout
       - run:
           name: executing ansible to a remote server
           command: |
@@ -80,11 +69,18 @@ jobs:
             . venv/bin/activate
             pip3 install ansible
             ansible-playbook -i ansible/hosts ansible/provision.yml
+
 Workflows:
   version: 2
-  build_publish_deploy:
+  test_publish_deploy:
     jobs:
       - test
+      - publish:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
       - deploy:
           requires:
             - test
