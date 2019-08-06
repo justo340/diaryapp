@@ -80,7 +80,7 @@ workflows:
       - hold:
           type: approval
           requires:
-            test
+            - test
       - publish:
           requires:
             - hold
