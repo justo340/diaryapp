@@ -33,16 +33,16 @@ jobs:
       - store_artifacts:
           path: test-results
 
-  deploy:
-    docker:
-      - image: circleci/python:3.6.4
-    environment:
-      - ANSIBLE_HOST_KEY_CHECKING: False
-    steps:
-      - add_ssh_keys:
-          fingerprints:
-            - $KEY
-      - checkout
+  # deploy:
+  #   docker:
+  #     - image: circleci/python:3.6.4
+  #   environment:
+  #     - ANSIBLE_HOST_KEY_CHECKING: False
+  #   steps:
+  #     - add_ssh_keys:
+  #         fingerprints:
+  #           - $KEY
+  #     - checkout
       - run:
           name: init .pypirc
           command: |
@@ -69,14 +69,14 @@ jobs:
             pip3 install ansible
             ansible-playbook -i ansible/hosts ansible/provision.yml
 
-Workflows:
-  version: 2
-  build_deploy:
-    jobs:
-      - build
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
+# Workflows:
+#   version: 2
+#   build_deploy:
+#     jobs:
+#       - build
+#       - deploy:
+#           requires:
+#             - build
+#           filters:
+#             branches:
+#               only: master
