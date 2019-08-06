@@ -42,17 +42,17 @@ jobs:
       - checkout
       - run:
           name: init .pypirc
-          shell: |
+          command: |
             echo -e "[pypi]" >> ~/.pypirc
             echo -e "username = justo" >> ~/.pypirc
             echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
       - run:
           name: create packages
-          shell: |
+          command: |
             python3 setup.py sdist
       - run:
           name: upload to pypi
-          shell: |
+          command: |
             python3 -m venv  venv
              . venv/bin/activate
             pip3 install --upgrade pip
@@ -60,7 +60,7 @@ jobs:
             twine upload dist/*
       - run:
           name: executing ansible to a remote server
-          shell: |
+          command: |
             python3 -m venv venv
             . venv/bin/activate
             pip3 install ansible
