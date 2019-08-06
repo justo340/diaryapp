@@ -66,11 +66,11 @@ jobs:
             pip3 install ansible
             ansible-playbook -i ansible/hosts ansible/provision.yml
 
-Workflows:
+workflows:
   version: 2
   test_deploy:
     jobs:
-      - test:
+      - test
       - deploy:
           requires:
             - test
