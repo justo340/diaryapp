@@ -8,5 +8,6 @@ omit =
     setup.py
     entries/tests/*
     entries/apps.py
+    diary/urls_prometheus_wrappers.py
     .tox/*
 
