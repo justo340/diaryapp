@@ -7,7 +7,7 @@ Prerequisites
 python 3.7
 Django 2.2.3
 
-Give examples
+
 Installing
 pip3 install diaryapp
 change database settings on diary.settings
